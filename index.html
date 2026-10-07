@@ -108,14 +108,22 @@ html:not(.js) #intro{display:none}
   background:radial-gradient(circle at 35% 30%,#ff9c8c,#ff4d6d 55%,#c11d43);
   box-shadow:0 0 0 10px rgba(255,77,109,.12),0 0 0 22px rgba(255,77,109,.05),0 22px 60px -10px rgba(255,77,109,.75);
 }
-.start-btn svg{width:48px;height:48px;fill:#fff;transition:transform .18s var(--spring)}
-.start-btn.beat svg{transform:scale(1.18)}
-.start-btn::before,.start-btn::after{
-  content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,77,109,.55);
-  animation:ripple 2.4s var(--out) infinite;
+.start-btn svg{width:48px;height:48px;fill:#fff}
+/* battement « boum-boum » : un coup fort puis un plus léger, calé sur le pic de l'ECG */
+.start-btn.beat{animation:lubdub .85s ease-out}
+@keyframes lubdub{
+  0%{transform:scale(1)}
+  9%{transform:scale(1.08)}
+  20%{transform:scale(.99)}
+  30%{transform:scale(1.04)}
+  55%,100%{transform:scale(1)}
 }
-.start-btn::after{animation-delay:1.2s}
-@keyframes ripple{from{transform:scale(1);opacity:.9}to{transform:scale(2.1);opacity:0}}
+.start-btn::before,.start-btn::after{
+  content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,77,109,.5);opacity:0;pointer-events:none;
+}
+.start-btn.beat::before{animation:ripple 1.5s cubic-bezier(.2,.6,.3,1) both}
+.start-btn.beat::after{animation:ripple 1.3s cubic-bezier(.2,.6,.3,1) .2s both;border-color:rgba(255,77,109,.3)}
+@keyframes ripple{0%{transform:scale(1);opacity:0}8%{opacity:.8}100%{transform:scale(1.9);opacity:0}}
 .intro-hint{margin:0;font-size:1.05rem;color:rgba(230,255,246,.9)}
 .intro-sub{margin:.6rem 0 0;font-family:var(--mono);font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(217,255,240,.5)}
 .cd-word{
@@ -540,9 +548,9 @@ html:not(.js) .invite-wrap{margin-top:1.5rem}
   padding:clamp(5rem,14vw,9rem) 1.25rem calc(3rem + env(safe-area-inset-bottom, 0px));
   background:linear-gradient(180deg,#070503,var(--night) 45%);
 }
-.beat{display:block;width:min(720px,100%);height:auto;margin:0 auto 1.6rem;overflow:visible}
-.beat path{fill:none;stroke:url(#beatGrad);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0;filter:drop-shadow(0 0 6px rgba(255,107,94,.7));transition:stroke-dashoffset 3.2s cubic-bezier(.55,.1,.3,1)}
-.js .finale:not(.in) .beat path{stroke-dashoffset:1}
+.fin-beat{display:block;width:min(720px,100%);height:auto;margin:0 auto 1.6rem;overflow:visible}
+.fin-beat path{fill:none;stroke:url(#beatGrad);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:0;filter:drop-shadow(0 0 6px rgba(255,107,94,.7));transition:stroke-dashoffset 3.2s cubic-bezier(.55,.1,.3,1)}
+.js .finale:not(.in) .fin-beat path{stroke-dashoffset:1}
 .fin-title{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(2.7rem,10.5vw,6.4rem);line-height:1;letter-spacing:-.025em}
 .fin-title em{font-style:italic;background:linear-gradient(90deg,var(--coral),var(--gold),var(--mint));-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:.05em}
 .fin-sub{max-width:36ch;margin:1.5rem auto 2.2rem;font-size:1.12rem;color:rgba(247,243,234,.78)}
@@ -554,7 +562,7 @@ html:not(.js) #partyBtn{display:none}
   html:not(.js) .chap>*,html:not(.js) [data-reveal]{animation:up linear both;animation-timeline:view();animation-range:entry 0% entry 70%}
   html:not(.js) .tr-row dd{animation:write linear both;animation-timeline:view();animation-range:entry 40% cover 45%}
   html:not(.js) .stamp{animation:stampIn linear both;animation-timeline:view();animation-range:entry 50% entry 100%}
-  html:not(.js) .beat path{animation:draw linear both;animation-timeline:view();animation-range:entry 10% cover 50%}
+  html:not(.js) .fin-beat path{animation:draw linear both;animation-timeline:view();animation-range:entry 10% cover 50%}
   html:not(.js) .gift-area{timeline-scope:--stage}
   html:not(.js) .stage{view-timeline:--stage block}
   html:not(.js) #dome{animation:domeLift linear both;animation-timeline:--stage;animation-range:cover 40% cover 70%}
@@ -903,7 +911,7 @@ html:not(.js) #partyBtn{display:none}
 
 <!-- ══════════ FINALE ══════════ -->
 <footer class="finale" id="finale" data-watch>
-  <svg class="beat" viewBox="0 0 600 120" aria-hidden="true">
+  <svg class="fin-beat" viewBox="0 0 600 120" aria-hidden="true">
     <defs><linearGradient id="beatGrad" x1="0" x2="1"><stop offset="0" stop-color="#ff6b5e" stop-opacity="0"/><stop offset=".2" stop-color="#ff6b5e"/><stop offset=".5" stop-color="#f2c76e"/><stop offset=".8" stop-color="#3dffb0"/><stop offset="1" stop-color="#3dffb0" stop-opacity="0"/></linearGradient></defs>
     <path pathLength="1" d="M0 80H140L152 80L160 62L170 104L182 30L194 92L202 80H300L272 52C258 38 266 16 286 20C294 22 300 30 300 36C300 30 306 22 314 20C334 16 342 38 328 52L300 80H448L458 80L466 62L476 100L486 80H600"/>
   </svg>
@@ -1189,9 +1197,9 @@ let started = false;
 const introMon = new Monitor($('#introEcg'), {
   bpm: 64, speed: 190, amp: .34,
   onBeat() {
-    startBtn.classList.add('beat');
-    setTimeout(() => startBtn.classList.remove('beat'), 170);
-    if (started) Sound.beep(880, .06);
+    if (started) { Sound.beep(880, .06); return; }
+    startBtn.classList.remove('beat'); void startBtn.offsetWidth; startBtn.classList.add('beat');
+    this.bpm = 60 + Math.random() * 8; // légère variabilité, comme un vrai cœur au repos
   },
 });
 introMon.start();
